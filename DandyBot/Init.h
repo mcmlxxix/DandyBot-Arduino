@@ -8,6 +8,7 @@
 #else
 	#include "WProgram.h"
 #endif
+
 #include <usbhub.h>
 #include "Logger.h"
 #include "Control.h"
@@ -25,20 +26,111 @@ HIDBoot<USB_HID_PROTOCOL_KEYBOARD> keyboard(&usb);
 /* input devices */
 PS3ControllerInterface* ps3Controller;
 WiiControllerInterface* wiiController;
-//SerialControllerInterface* serialController;
 KeyboardControllerInterface keyboardController;
+SerialControllerInterface serialController;
 
 /* motion controllers */
 TankMotionController tankMotionController;
 /* TODO: wheel motion controller */
 
 /* state information */
-bool usbInitialized = false;
-bool bluetoothInitialized = false;
-bool wiiControllerInitialized = false;
-bool ps3ControllerInitialized = false;
-bool keyboardInitialized = false;
-bool tankMotionControllerInitialized = false;
+bool usbReady = false;
+bool bluetoothReady = false;
+bool wiiControllerReady = false;
+bool ps3ControllerReady = false;
+bool keyboardReady = false;
+bool tankMotionControllerReady = false;
+
+void processMovementCommand(DigitalMovement movement) {
+    if (tankMotionControllerReady) {
+        tankMotionController.DigitalMove(movement);
+    }
+    /* TODO: wheel motion controller */
+}
+
+void onSerialData() {
+    String cmd = serialController.GetCommand();
+    if (cmd != "") {
+        DigitalMovement movement(-1);
+        bool doMovement = true;
+        cmd.toLowerCase();
+        if (cmd == "stop" || cmd == "s") {
+            //Logger::Log("emergency stop");
+            movement = DigitalMovement(-1);
+        }
+        else if (cmd == "left" || cmd == "l") {
+            //Logger::Log("turning left");
+            movement = DigitalMovement(LEFT);
+        }
+        else if (cmd == "right" || cmd == "r") {
+            //Logger::Log("turning right");
+            movement = DigitalMovement(RIGHT);
+        }
+        else if (cmd == "fwd" || cmd == "f") {
+            //Logger::Log("moving forward");
+            movement = DigitalMovement(UP);
+        }
+        else if (cmd == "back" || cmd == "b") {
+            //Logger::Log("moving backward");
+            movement = DigitalMovement(DOWN);
+        }
+        else if (cmd == "help" || cmd == "?") {
+            Logger::Log("Commands: stop, left, right, fwd, back, help/?");
+            doMovement = false;
+        }
+        else {
+            Logger::Log("Unknown serial command: " + cmd);
+            doMovement = false;
+        }
+        if (doMovement) {
+            processMovementCommand(movement);
+        }
+    }
+}
+
+void onKeyDown(char* key) {
+    String cmdString = (String)key;
+    DigitalMovement movement(-1);
+    bool doMovement = true;
+
+    if (cmdString == "50") { //left
+        //Logger::Log("turning left");
+        movement = DigitalMovement(LEFT);
+    }
+    else if (cmdString == "4f") { //right
+        //Logger::Log("turning right");
+        movement = DigitalMovement(RIGHT);
+    }
+    else if (cmdString == "52") { //up
+        //Logger::Log("moving forward");
+        movement = DigitalMovement(UP);
+    }
+    else if (cmdString == "51") { //down
+        //Logger::Log("moving backward");
+        movement = DigitalMovement(DOWN);
+    }
+    else if (cmdString == "29") { //escape
+        //Logger::Log("emergency stop");
+        movement = DigitalMovement(-1);
+    }
+    else {
+        Logger::Log("unknown command key: " + cmdString);
+        doMovement = false;
+        return;
+    }
+
+    if (doMovement) {
+        processMovementCommand(movement);
+    }
+}
+
+void onKeyUp(char* key) {
+    //Logger::Log("key released: " + (String) key);
+    if (tankMotionControllerReady) {
+        tankMotionController.MoveStop(false);
+    }
+    /* TODO: wheel motion controller */
+}
 
 void initSerial() {
     Serial.begin(9600);
@@ -48,82 +140,32 @@ void initSerial() {
 #endif
 }
 
-void onKeyDown(char* key) {
-    String cmdString = (String)key;
-    DigitalMovement movement(-1);
-    bool doMovement = false;
-
-    if (cmdString == "50") { //left
-        //Logger::Log("turning left");
-        movement = DigitalMovement(LEFT);
-        doMovement = true;
-    }
-    else if (cmdString == "4f") { //right
-        //Logger::Log("turning right");
-        movement = DigitalMovement(RIGHT);
-        doMovement = true;
-    }
-    else if (cmdString == "52") { //up
-        //Logger::Log("moving forward");
-        movement = DigitalMovement(UP);
-        doMovement = true;
-    }
-    else if (cmdString == "51") { //down
-        //Logger::Log("moving backward");
-        movement = DigitalMovement(DOWN);
-        doMovement = true;
-    }
-    else if (cmdString == "29") { //escape
-        //Logger::Log("emergency stop");
-        movement = DigitalMovement(-1);
-        doMovement = true;
-    }
-    else {
-        Logger::Log("unknown command key: " + cmdString);
-        return;
-    }
-
-    if (tankMotionControllerInitialized && doMovement) {
-        tankMotionController.DigitalMove(movement);
-    }
-    /* TODO: wheel motion controller */
-}
-
-void onKeyUp(char* key) {
-    //Logger::Log("key released: " + (String) key);
-    if (tankMotionControllerInitialized) {
-        tankMotionController.MoveStop(false);
-    }
-    /* TODO: wheel motion controller */
-}
-
 bool initUSB() {
     if (usb.Init() == -1) {
-        Logger::Log("OSC did not start");
+        Logger::Log("Error initializing OSC");
         return false;
     }
-    Logger::Log("OSC started");
+    Logger::Log("OSC ready");
     return true;
 }
 
 bool initBluetooth() {
-    //bluetoothDongle = &BTD(&usb);
+    //int timeout = 5;
+    //int counter = 0;
+    //while (!bluetoothDongle.isReady() && counter++ < timeout) {
+    //    delay(1000);
+    //}
     if (bluetoothDongle.isReady()) {
-        Logger::Log("Bluetooth initialized");
-        Logger::Log("Address: " + bluetoothDongle.GetAddress());
         return true;
     }
-    Logger::Log("Bluetooth not found");
     return false;
 }
 
 bool initWiiController() {
     wiiController = &WiiControllerInterface(&bluetoothDongle);
     if (wiiController->Init()) {
-        Logger::Log("Wii controller initialized");
         return true;
     }
-    Logger::Log("Wii controller not found");
     return false;
 }
 
@@ -132,10 +174,8 @@ bool initPS3Controller() {
     //PS3ControllerInterface ps3Controller(&bluetoothDongle, bluetoothDongle.GetAddress()); // This will also store the bluetooth address - this can be obtained from the dongle when running the sketch
     ps3Controller = &PS3ControllerInterface(&bluetoothDongle, bluetoothDongle.GetAddress());
     if (ps3Controller->Init()) {
-        Logger::Log("PS3 controller initialized");
         return true;
     }
-    Logger::Log("PS3 controller not found");
     return false;
 }
 
@@ -144,10 +184,10 @@ bool initKeyboard() {
     keyboardController.SetOnKeyUp(&onKeyUp);
 
     if (keyboard.SetReportParser(0, &keyboardController)) {
-        Logger::Log("Keyboard initialized");
+        Logger::Log("USB keyboard ready");
         return true;
     }
-    Logger::Log("Keyboard not found");
+    Logger::Log("Error initializing USB keyboard");
     return false;
 }
 
@@ -158,12 +198,58 @@ bool initTankMotionController() {
     int rBckPin = 10;
 
     if (tankMotionController.Init(lFwdPin, lBckPin, rFwdPin, rBckPin)) {
-        Logger::Log("Tank motion controller initialized");
+        Logger::Log("Tank motion controller ready");
         return true;
     }
-    Logger::Log("Tank motion controller not found");
     return false;
 }
 
+void scanBluetooth() {
+    bool wasReady = bluetoothReady;
+    bluetoothReady = initBluetooth();
+    if (wasReady && !bluetoothReady) {
+        Logger::Log("Bluetooth disconnected");
+    }
+    else if (!wasReady && bluetoothReady) {
+        Logger::Log("Bluetooth ready");
+    }
+}
+
+void scanPeripherals() {
+    bool wasWiiReady = wiiControllerReady;
+    bool wasPS3Ready = ps3ControllerReady;
+    if (bluetoothReady) {
+        wiiControllerReady = initWiiController();
+        ps3ControllerReady = initPS3Controller();
+    }
+    else {
+        wiiControllerReady = false;
+        ps3ControllerReady = false;
+    }
+    if (wasWiiReady && !wiiControllerReady) {
+        Logger::Log("Wiimote disconnected");
+    }
+    else if (!wasWiiReady && wiiControllerReady) {
+        Logger::Log("Wiimote connected");
+    }
+    if (wasPS3Ready && !ps3ControllerReady) {
+        Logger::Log("PS3 controller disconnected");
+    }
+    else if (!wasPS3Ready && ps3ControllerReady) {
+        Logger::Log("PS3 controller connected");
+    }
+}
+
+void scanControllerInput() {
+    /* get manual directional movement from game controller input sources */
+    if (wiiControllerReady) {
+        DigitalMovement movement = getControllerMovement(wiiController);
+        processMovementCommand(movement);
+    }
+    else if (ps3ControllerReady) {
+        DigitalMovement movement = getControllerMovement(ps3Controller);
+        processMovementCommand(movement);
+    }
+}
 #endif
 

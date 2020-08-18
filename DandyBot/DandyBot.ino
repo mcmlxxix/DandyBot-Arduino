@@ -8,77 +8,60 @@
 #include "Init.h"
 #include "Control.h"
 
+int loopCount = 0;
+int loopDelayMS = 100;
+int bluetoothRescanMS = 5000;
+
 void setup() {
-    Logger::Log("\r\n");
+    Logger::Log("\r\n######### BEGIN ###########\r\n");
 
     initSerial();
 
-    usbInitialized = initUSB();
-    tankMotionControllerInitialized = initTankMotionController();
+    usbReady = initUSB();
+    tankMotionControllerReady = initTankMotionController();
 
-    if (usbInitialized) {
-        keyboardInitialized = initKeyboard();
-        bluetoothInitialized = initBluetooth();
-        if (bluetoothInitialized) {
-            wiiControllerInitialized = initWiiController();
-            ps3ControllerInitialized = initPS3Controller();
-        }
+    if (usbReady) {
+        keyboardReady = initKeyboard();
     }
-
-    Logger::Log("\r\n");
 }
 
 void loop() {
 
-    if (!usbInitialized) {
+    if (!usbReady) {
         errorLoop();
     }
     else {
         usb.Task();
     }
 
-    /* get manual directional movement from game controller input sources */
-    if (wiiControllerInitialized) {
-        DigitalMovement movement = getControllerMovement(wiiController);
-        tankMotionController.DigitalMove(movement);
-    }
-    else if (ps3ControllerInitialized) {
-        DigitalMovement movement = getControllerMovement(ps3Controller);
-        tankMotionController.DigitalMove(movement);
+    /* retry bluetooth init every n milliseconds */
+    bool rescan = (++loopCount * loopDelayMS) % bluetoothRescanMS == 0;
+    if (rescan) {
+        scanBluetooth();
+        scanPeripherals();
+        loopCount = 0;
     }
 
-    delay(100);
+    /* check connected controllers for input */
+    if (bluetoothReady && (wiiControllerReady || ps3ControllerReady)) {
+        scanControllerInput();
+    }
+
+    delay(loopDelayMS);
 }
 
 /* get serial commands (BROKEN) */
 void serialEvent() {
-    //String cmd = serialController.GetCommand();
-    //if (cmd != "") {
-    //    cmd.toLowerCase();
-    //    if (cmd == "stop") {
-    //        tankMotionController.MoveStop(true);
-    //    }
-    //    else if (cmd == "left") {
-    //        tankMotionController.TurnLeft();
-    //    }
-    //    else if (cmd == "right") {
-    //        tankMotionController.TurnRight();
-    //    }
-    //    else if (cmd == "fwd") {
-    //        tankMotionController.MoveForward();
-    //    }
-    //    else if (cmd == "back") {
-    //        tankMotionController.MoveBackward();
-    //    }
-    //}
+    onSerialData();
 }
 
 void errorLoop() {
     while (1) {
         digitalWrite(13, HIGH);
-        delay(1000);
+        delay(500);
         digitalWrite(13, LOW);
-        delay(1000);
+        delay(500);
     }
 }
+
 

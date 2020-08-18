@@ -8,7 +8,7 @@
 #include "ButtonPress.h"
 
 WiiControllerInterface::WiiControllerInterface(BTD* btd)
-	: bluetoothDongle(btd), wiiController(btd, PAIR)
+	: bluetoothDongle(btd), wiiController(btd)
 {
 	//0x00, 0x1A, 0x7D, 0xDA, 0x71, 0x13
 }
@@ -18,9 +18,12 @@ bool WiiControllerInterface::Init() {
 	analogMax = 360;
 	analogNeutalLow = 170;
 	analogNeutralHigh = 190;
-	//wiiController.pair();
+	bool connected = wiiController.wiimoteConnected;
+	return connected;
+}
 
-	return wiiController.wiimoteConnected;
+void WiiControllerInterface::Pair() {
+	wiiController.pair();
 }
 
 AnalogMovement WiiControllerInterface::GetLeftAnalogMovement()

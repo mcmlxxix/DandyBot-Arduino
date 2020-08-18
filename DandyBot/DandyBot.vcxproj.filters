@@ -1,0 +1,135 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="Misc Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>xml;json;txt;rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Source Files\ControllerInterfaces">
+      <UniqueIdentifier>{b8e55a9f-cc5c-4c3d-8b1f-5f8fceb5b68a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\ChassisInterfaces">
+      <UniqueIdentifier>{223cf6b9-16af-496c-b144-f0158bacb192}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\Helpers">
+      <UniqueIdentifier>{4a209c83-6d7b-4b54-b4a5-6e05f3782620}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ControllerInterfaces">
+      <UniqueIdentifier>{7c4042c7-aea5-4ec7-b38b-f40a858a31c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\ChassisInterfaces">
+      <UniqueIdentifier>{03f699af-acc2-447b-969a-5b0751940872}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Helpers">
+      <UniqueIdentifier>{7138fb48-7c60-4aa7-9a85-539c3890dc98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\InputClasses">
+      <UniqueIdentifier>{3a6cdfe0-0fc1-4578-9150-8512d8147c51}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\InputClasses">
+      <UniqueIdentifier>{99cd089a-4f12-4c4c-b470-ee56d4315a74}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Functions">
+      <UniqueIdentifier>{3e512f2f-584e-4337-9140-4913b8b77b76}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\Init">
+      <UniqueIdentifier>{a6403eac-36fc-4966-a197-ede982182f6d}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="DandyBot.ino" />
+    <None Include="cpp.hint" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="__vm\.DandyBot.vsarduino.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="AnalogMovement.h">
+      <Filter>Header Files\InputClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="DigitalMovement.h">
+      <Filter>Header Files\InputClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="KeyboardControllerInterface.h">
+      <Filter>Header Files\ControllerInterfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="PS3ControllerInterface.h">
+      <Filter>Header Files\ControllerInterfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="SerialControllerInterface.h">
+      <Filter>Header Files\ControllerInterfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="WiiControllerInterface.h">
+      <Filter>Header Files\ControllerInterfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="Logger.h">
+      <Filter>Header Files\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="MACHelper.h">
+      <Filter>Header Files\Helpers</Filter>
+    </ClInclude>
+    <ClInclude Include="ButtonPress.h">
+      <Filter>Header Files\InputClasses</Filter>
+    </ClInclude>
+    <ClInclude Include="resource.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Control.h">
+      <Filter>Header Files\Functions</Filter>
+    </ClInclude>
+    <ClInclude Include="Init.h">
+      <Filter>Header Files\Init</Filter>
+    </ClInclude>
+    <ClInclude Include="ControllerInterface.h">
+      <Filter>Header Files\ControllerInterfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="TankMotionController.h">
+      <Filter>Header Files\ChassisInterfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="MotionController.h">
+      <Filter>Header Files\ChassisInterfaces</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="KeyboardControllerInterface.cpp">
+      <Filter>Source Files\ControllerInterfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="PS3ControllerInterface.cpp">
+      <Filter>Source Files\ControllerInterfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="SerialControllerInterface.cpp">
+      <Filter>Source Files\ControllerInterfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="WiiControllerInterface.cpp">
+      <Filter>Source Files\ControllerInterfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="AnalogMovement.cpp">
+      <Filter>Source Files\InputClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="DigitalMovement.cpp">
+      <Filter>Source Files\InputClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="MACHelper.cpp">
+      <Filter>Source Files\Helpers</Filter>
+    </ClCompile>
+    <ClCompile Include="ButtonPress.cpp">
+      <Filter>Source Files\InputClasses</Filter>
+    </ClCompile>
+    <ClCompile Include="TankMotionController.cpp">
+      <Filter>Source Files\ChassisInterfaces</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ResourceCompile Include="DandyBot.rc">
+      <Filter>Misc Files</Filter>
+    </ResourceCompile>
+  </ItemGroup>
+</Project>

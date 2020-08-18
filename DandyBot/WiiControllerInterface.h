@@ -24,6 +24,7 @@ public:
 	DigitalMovement GetDigitalMovement();
 	ButtonPress GetButtonPress();
 	bool Init();
+	void Pair();
 private:
 	BTD* bluetoothDongle;
 	WII wiiController;

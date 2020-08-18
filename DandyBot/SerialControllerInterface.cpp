@@ -14,7 +14,7 @@ String SerialControllerInterface::GetCommand() {
 		if (received == '\n')
 		{
 			String command = buffer.substring(0);
-			Serial.print("\r\nreceived serial command: " + command);
+			//Serial.print("\r\nreceived serial command: " + command);
 			buffer = "";
 			return command;
 		}

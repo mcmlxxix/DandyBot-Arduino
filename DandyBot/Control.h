@@ -10,10 +10,10 @@
 #endif
 
 #include "DigitalMovement.h"
-#include "ControllerInterface.h"
+#include "GameControllerInterface.h"
 
 /* process direction pad input from various input sources */
-DigitalMovement getControllerMovement(ControllerInterface* controller) {
+DigitalMovement getControllerMovement(GameControllerInterface* controller) {
     DigitalMovement movement(-1);
     if (movement.GetDirection() == -1) {
         movement = controller->GetDigitalMovement();

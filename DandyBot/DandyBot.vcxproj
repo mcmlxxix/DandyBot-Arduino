@@ -116,7 +116,7 @@
     <ClInclude Include="AnalogMovement.h" />
     <ClInclude Include="ButtonPress.h" />
     <ClInclude Include="Control.h" />
-    <ClInclude Include="ControllerInterface.h" />
+    <ClInclude Include="GameControllerInterface.h" />
     <ClInclude Include="DigitalMovement.h" />
     <ClInclude Include="Init.h" />
     <ClInclude Include="KeyboardControllerInterface.h" />

@@ -88,14 +88,14 @@
     <ClInclude Include="Init.h">
       <Filter>Header Files\Init</Filter>
     </ClInclude>
-    <ClInclude Include="ControllerInterface.h">
-      <Filter>Header Files\ControllerInterfaces</Filter>
-    </ClInclude>
     <ClInclude Include="TankMotionController.h">
       <Filter>Header Files\ChassisInterfaces</Filter>
     </ClInclude>
     <ClInclude Include="MotionController.h">
       <Filter>Header Files\ChassisInterfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="GameControllerInterface.h">
+      <Filter>Header Files\ControllerInterfaces</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>

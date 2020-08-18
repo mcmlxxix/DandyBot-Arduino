@@ -18,12 +18,12 @@
 #include "WiiControllerInterface.h"
 #include "KeyboardControllerInterface.h"
 
-/* base crap */
+/* input devices */
 USB usb;
 BTD bluetoothDongle(&usb);
 HIDBoot<USB_HID_PROTOCOL_KEYBOARD> keyboard(&usb);
 
-/* input devices */
+/* input interfaces */
 PS3ControllerInterface* ps3Controller;
 WiiControllerInterface* wiiController;
 KeyboardControllerInterface keyboardController;

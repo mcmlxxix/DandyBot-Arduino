@@ -10,12 +10,12 @@
 #endif
 
 #include <WII.h>
-#include "ControllerInterface.h"
+#include "GameControllerInterface.h"
 #include "AnalogMovement.h"
 #include "DigitalMovement.h"
 #include "ButtonPress.h"
 
-class WiiControllerInterface : public ControllerInterface {
+class WiiControllerInterface : public GameControllerInterface {
 public:
 	WiiControllerInterface(BTD* btd);
 

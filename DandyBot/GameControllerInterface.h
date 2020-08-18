@@ -1,7 +1,7 @@
-// ControllerInterface.h
+// GameControllerInterface.h
 
-#ifndef _CONTROLLERINTERFACE_h
-#define _CONTROLLERINTERFACE_h
+#ifndef _GAMECONTROLLERINTERFACE_h
+#define _GAMECONTROLLERINTERFACE_h
 
 #if defined(ARDUINO) && ARDUINO >= 100
 #include "arduino.h"
@@ -14,9 +14,9 @@
 #include "DigitalMovement.h"
 #include "ButtonPress.h"
 
-class ControllerInterface {
+class GameControllerInterface {
 public:
-	ControllerInterface() {	};
+	GameControllerInterface() {	};
 
 	virtual AnalogMovement GetLeftAnalogMovement() {
 		return AnalogMovement(0, 0);

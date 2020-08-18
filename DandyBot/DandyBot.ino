@@ -30,11 +30,12 @@ void setup() {
 
 void loop() {
 
-    //if (!usbInitialized) {
-    //    errorLoop();
-    //}
-
-    usb.Task();
+    if (!usbInitialized) {
+        errorLoop();
+    }
+    else {
+        usb.Task();
+    }
 
     /* get manual directional movement from game controller input sources */
     if (wiiControllerInitialized) {

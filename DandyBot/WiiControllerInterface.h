@@ -9,7 +9,7 @@
 	#include "WProgram.h"
 #endif
 
-#include <WII.h>
+#include <Wii.h>
 #include "GameControllerInterface.h"
 #include "AnalogMovement.h"
 #include "DigitalMovement.h"

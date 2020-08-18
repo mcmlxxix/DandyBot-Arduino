@@ -2,6 +2,7 @@
 // 
 // 
 
+#include <Wii.h>
 #include "WiiControllerInterface.h"
 #include "AnalogMovement.h"
 #include "DigitalMovement.h"
@@ -11,19 +12,23 @@ WiiControllerInterface::WiiControllerInterface(BTD* btd)
 	: bluetoothDongle(btd), wiiController(btd)
 {
 	//0x00, 0x1A, 0x7D, 0xDA, 0x71, 0x13
-}
-
-bool WiiControllerInterface::Init() {
 	analogMin = 0;
 	analogMax = 360;
 	analogNeutalLow = 170;
 	analogNeutralHigh = 190;
+}
+
+bool WiiControllerInterface::Init() {
 	bool connected = wiiController.wiimoteConnected;
+	if (connected) {
+		wiiController.setAllOff();
+		wiiController.setLedOn(LED1);
+	}
 	return connected;
 }
 
 void WiiControllerInterface::Pair() {
-	wiiController.pair();
+	//wiiController.pair();
 }
 
 AnalogMovement WiiControllerInterface::GetLeftAnalogMovement()

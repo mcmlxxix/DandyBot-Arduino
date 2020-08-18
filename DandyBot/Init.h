@@ -24,8 +24,8 @@ BTD bluetoothDongle(&usb);
 HIDBoot<USB_HID_PROTOCOL_KEYBOARD> keyboard(&usb);
 
 /* input interfaces */
-PS3ControllerInterface* ps3Controller;
-WiiControllerInterface* wiiController;
+PS3ControllerInterface ps3Controller(&bluetoothDongle, bluetoothDongle.GetAddress());
+WiiControllerInterface wiiController(&bluetoothDongle);
 KeyboardControllerInterface keyboardController;
 SerialControllerInterface serialController;
 
@@ -133,7 +133,7 @@ void onKeyUp(char* key) {
 }
 
 void initSerial() {
-    Serial.begin(9600);
+    Serial.begin(115200);
 
 #if !defined(__MIPSEL__)
     while (!Serial); // Wait for serial port to connect - used on Leonardo, Teensy and other boards with built-in USB CDC serial connection
@@ -162,18 +162,14 @@ bool initBluetooth() {
 }
 
 bool initWiiController() {
-    wiiController = &WiiControllerInterface(&bluetoothDongle);
-    if (wiiController->Init()) {
+    if (wiiController.Init()) {
         return true;
     }
     return false;
 }
 
 bool initPS3Controller() {
-    //PS3ControllerInterface ps3Controller(&bluetoothDongle, 0x00, 0x1A, 0x7D, 0xDA, 0x71, 0x13); // This will also store the bluetooth address - this can be obtained from the dongle when running the sketch
-    //PS3ControllerInterface ps3Controller(&bluetoothDongle, bluetoothDongle.GetAddress()); // This will also store the bluetooth address - this can be obtained from the dongle when running the sketch
-    ps3Controller = &PS3ControllerInterface(&bluetoothDongle, bluetoothDongle.GetAddress());
-    if (ps3Controller->Init()) {
+    if (ps3Controller.Init()) {
         return true;
     }
     return false;
@@ -243,11 +239,11 @@ void scanPeripherals() {
 void scanControllerInput() {
     /* get manual directional movement from game controller input sources */
     if (wiiControllerReady) {
-        DigitalMovement movement = getControllerMovement(wiiController);
+        DigitalMovement movement = getControllerMovement(&wiiController);
         processMovementCommand(movement);
     }
     else if (ps3ControllerReady) {
-        DigitalMovement movement = getControllerMovement(ps3Controller);
+        DigitalMovement movement = getControllerMovement(&ps3Controller);
         processMovementCommand(movement);
     }
 }

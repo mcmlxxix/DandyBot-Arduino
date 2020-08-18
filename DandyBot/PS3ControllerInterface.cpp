@@ -17,14 +17,14 @@ PS3ControllerInterface::PS3ControllerInterface(BTD *btd, uint8_t a1, uint8_t a2,
 PS3ControllerInterface::PS3ControllerInterface(BTD* btd, uint8_t macAddress)
 	: bluetoothDongle(btd), ps3Controller(btd, macAddress)
 {
-	//0x00, 0x1A, 0x7D, 0xDA, 0x71, 0x13
-}
-
-bool PS3ControllerInterface::Init() {
 	analogMin = 0;
 	analogMax = 255;
 	analogNeutalLow = 117;
 	analogNeutralHigh = 137;
+	//0x00, 0x1A, 0x7D, 0xDA, 0x71, 0x13
+}
+
+bool PS3ControllerInterface::Init() {
 	return ps3Controller.PS3Connected;
 }
 

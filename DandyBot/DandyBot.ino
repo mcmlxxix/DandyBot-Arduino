@@ -9,8 +9,9 @@
 #include "Control.h"
 
 int loopCount = 0;
-int loopDelayMS = 100;
+int loopDelayMS = 10;
 int bluetoothRescanMS = 5000;
+int peripheralRescanMS = 1000;
 
 void setup() {
     Logger::Log("\r\n######### BEGIN ###########\r\n");
@@ -35,11 +36,18 @@ void loop() {
     }
 
     /* retry bluetooth init every n milliseconds */
-    bool rescan = (++loopCount * loopDelayMS) % bluetoothRescanMS == 0;
-    if (rescan) {
+    bool bluetoothRescan = (++loopCount * loopDelayMS) % bluetoothRescanMS == 0;
+    if (bluetoothRescan) {
+        //Logger::Log("Scanning bluetooth");
         scanBluetooth();
+        //loopCount = 0;
+    }
+
+    bool peripheralRescan = (loopCount * loopDelayMS) % peripheralRescanMS == 0;
+    if (bluetoothReady && peripheralRescan) {
+        //Logger::Log("Scanning peripherals");
         scanPeripherals();
-        loopCount = 0;
+        //loopCount = 0;
     }
 
     /* check connected controllers for input */

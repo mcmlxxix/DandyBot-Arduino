@@ -4,6 +4,35 @@
  Author:	mcmlxxix
 */
 
+#include <XBOXUSB.h>
+#include <XBOXONE.h>
+#include <XBOXRECV.h>
+#include <xboxEnums.h>
+#include <XBOXOLD.h>
+#include <version_helper.h>
+#include <Wii.h>
+#include <Usb.h>
+#include <SPP.h>
+#include <settings.h>
+#include <PSBuzz.h>
+#include <PS4USB.h>
+#include <PS4Parser.h>
+#include <PS3USB.h>
+#include <PS4BT.h>
+#include <PS3Enums.h>
+#include <PS3BT.h>
+#include <max_LCD.h>
+#include <masstorage.h>
+#include <hiduniversal.h>
+#include <hidusagestr.h>
+#include <hidescriptorparser.h>
+#include <hidcomposite.h>
+#include <hidboot.h>
+#include <controllerEnums.h>
+#include <BTHID.h>
+#include <cdcacm.h>
+#include <BTD.h>
+#include <adk.h>
 #include "Logger.h"
 #include "Init.h"
 #include "Control.h"
@@ -13,6 +42,15 @@ int loopDelayMS = 10;
 int bluetoothRescanMS = 5000;
 int peripheralRescanMS = 1000;
 
+void errorLoop() {
+    while (1) {
+        digitalWrite(13, HIGH);
+        delay(500);
+        digitalWrite(13, LOW);
+        delay(500);
+    }
+}
+
 void setup() {
     Logger::Log("\r\n######### BEGIN ###########\r\n");
 
@@ -20,6 +58,7 @@ void setup() {
 
     usbReady = initUSB();
     tankMotionControllerReady = initTankMotionController();
+    mecanumMotionControllerReady = initMecanumMotionController();
 
     if (usbReady) {
         keyboardReady = initKeyboard();
@@ -61,15 +100,6 @@ void loop() {
 /* get serial commands (BROKEN) */
 void serialEvent() {
     onSerialData();
-}
-
-void errorLoop() {
-    while (1) {
-        digitalWrite(13, HIGH);
-        delay(500);
-        digitalWrite(13, LOW);
-        delay(500);
-    }
 }
 
 

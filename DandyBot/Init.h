@@ -9,11 +9,13 @@
 	#include "WProgram.h"
 #endif
 
-#include <usbhub.h>
+#include <Usb.h>
 #include "Logger.h"
 #include "Control.h"
+#include "MecanumMotor.h"
 #include "PS3ControllerInterface.h"
 #include "TankMotionController.h"
+#include "MecanumMotionController.h"
 #include "SerialControllerInterface.h"
 #include "WiiControllerInterface.h"
 #include "KeyboardControllerInterface.h"
@@ -30,7 +32,8 @@ KeyboardControllerInterface keyboardController;
 SerialControllerInterface serialController;
 
 /* motion controllers */
-TankMotionController tankMotionController;
+//TankMotionController tankMotionController;
+MecanumMotionController mecanumMotionController;
 /* TODO: wheel motion controller */
 
 /* state information */
@@ -40,12 +43,15 @@ bool wiiControllerReady = false;
 bool ps3ControllerReady = false;
 bool keyboardReady = false;
 bool tankMotionControllerReady = false;
+bool mecanumMotionControllerReady = false;
 
 void processMovementCommand(DigitalMovement movement) {
-    if (tankMotionControllerReady) {
-        tankMotionController.DigitalMove(movement);
+    //if (tankMotionControllerReady) {
+    //    tankMotionController.DigitalMove(movement);
+    //}
+    if (mecanumMotionControllerReady) {
+        mecanumMotionController.DigitalMove(movement);
     }
-    /* TODO: wheel motion controller */
 }
 
 void onSerialData() {
@@ -126,10 +132,12 @@ void onKeyDown(char* key) {
 
 void onKeyUp(char* key) {
     //Logger::Log("key released: " + (String) key);
-    if (tankMotionControllerReady) {
-        tankMotionController.MoveStop(false);
+    //if (tankMotionControllerReady) {
+    //    tankMotionController.MoveStop(false);
+    //}
+    if (mecanumMotionControllerReady) {
+        mecanumMotionController.MoveStop(false);
     }
-    /* TODO: wheel motion controller */
 }
 
 void initSerial() {
@@ -193,8 +201,21 @@ bool initTankMotionController() {
     int rFwdPin = 11;
     int rBckPin = 10;
 
-    if (tankMotionController.Init(lFwdPin, lBckPin, rFwdPin, rBckPin)) {
-        Logger::Log("Tank motion controller ready");
+    //if (tankMotionController.Init(lFwdPin, lBckPin, rFwdPin, rBckPin)) {
+    //    Logger::Log("Tank motion controller ready");
+    //    return true;
+    //}
+    return false;
+}
+
+bool initMecanumMotionController() {
+    MecanumMotor leftFrontMotor(2, 3, 4);
+    MecanumMotor rightFrontMotor(5, 6, 7);
+    MecanumMotor leftRearMotor(8, 9, 10);
+    MecanumMotor rightRearMotor(11, 12, 13);
+
+    if (mecanumMotionController.Init(&leftFrontMotor, &rightFrontMotor, &leftRearMotor, &rightRearMotor)) {
+        Logger::Log("Mecanum motion controller ready");
         return true;
     }
     return false;

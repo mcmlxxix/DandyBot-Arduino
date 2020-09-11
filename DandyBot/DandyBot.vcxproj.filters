@@ -97,6 +97,12 @@
     <ClInclude Include="GameControllerInterface.h">
       <Filter>Header Files\ControllerInterfaces</Filter>
     </ClInclude>
+    <ClInclude Include="MecanumMotionController.h">
+      <Filter>Header Files\ChassisInterfaces</Filter>
+    </ClInclude>
+    <ClInclude Include="MecanumMotor.h">
+      <Filter>Header Files\ChassisInterfaces</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="KeyboardControllerInterface.cpp">
@@ -124,6 +130,12 @@
       <Filter>Source Files\InputClasses</Filter>
     </ClCompile>
     <ClCompile Include="TankMotionController.cpp">
+      <Filter>Source Files\ChassisInterfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="MecanumMotionController.cpp">
+      <Filter>Source Files\ChassisInterfaces</Filter>
+    </ClCompile>
+    <ClCompile Include="MecanumMotor.cpp">
       <Filter>Source Files\ChassisInterfaces</Filter>
     </ClCompile>
   </ItemGroup>
